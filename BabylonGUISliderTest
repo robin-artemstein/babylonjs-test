@@ -1,0 +1,50 @@
+var createScene = function() {
+    var scene = new BABYLON.Scene(engine);
+
+    //Adding a light
+    var light = new BABYLON.PointLight("Omni", new BABYLON.Vector3(20, 20, 100), scene);
+
+    //Adding an Arc Rotate Camera
+    var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 100, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(canvas, false);
+
+    // GUI
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    var grid = new BABYLON.GUI.Grid();
+    advancedTexture.addControl(grid);
+
+    grid.addColumnDefinition(300);
+
+    var addSlider = function(isVertical, isClamped, displayThumb, row, col) {
+        var panel = new BABYLON.GUI.StackPanel();
+        panel.width = "220px";
+        grid.addControl(panel, row, col);
+
+        var header = new BABYLON.GUI.TextBlock();
+        header.text = "Y-rotation: 0 deg";
+        header.height = "30px";
+        header.color = "white";
+        panel.addControl(header);
+
+        var slider = new BABYLON.GUI.Slider();
+        slider.minimum = 0;
+        slider.maximum = 1.75;
+        slider.isThumbClamped = isClamped;
+        slider.isVertical = isVertical;
+        slider.displayThumb = displayThumb;
+        slider.width = "20px";
+        slider.height = "200px";
+        slider.height = "20px";
+        slider.width = "200px";
+        slider.color = "blue";
+        slider.onValueChangedObservable.add(function(value) {
+            header.text = "Y-rotation: " + (BABYLON.Tools.ToDegrees(value) | 0) + " deg";
+        });
+
+        slider.value = Math.PI + Math.random() * Math.PI;
+        panel.addControl(slider);
+    }
+    addSlider(false, true, true, 0, 0);
+    return scene;
+}
